@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svintus</title>
+    <link rel="stylesheet" href="css/anim.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="login">
+        <div class="login_wrapper">
+            <h3>Вход</h3>
+            <div class="image_picker">
+                <img onclick="pick_image(this)" src="assets/avatars/avatar1.jpeg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/baba.jpg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/frog.webp" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/minion.jpg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/motobike.jpg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/no_user.png" class="picked_image" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/ok.jpg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/podslushano.jpg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/skeleton.jpg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/spongebob.jpg" alt="" srcset="">
+                <img onclick="pick_image(this)" src="assets/avatars/wolf.jpg" alt="" srcset="">
+            </div>
+            <div class="name_input">
+                <input type="text" placeholder="Имя" id="MY_NAME" value="test">
+                <input type="text" placeholder="Айпишник сервера" id="SERVER_IP" value="localhost:8765">
+            </div>
+            <div class="submit">
+                <button onclick="JoinTheGame()">Войти в игру</button>
+            </div>
+        </div>
+    </div>
+    <div id="loading">
+        <h1>Произошла пауза</h1>
+        <h3>Игроки:</h3>
+        <div class="loading_players">
+            <!-- <div class="loading_player">
+                <img src="assets/avatars/baba.jpg" alt="">
+                <span>SKISTE</span>
+            </div> -->
+        </div>
+    </div>
+    <div id="ui">
+        <div id="players">
+
+        </div>
+        <div id="main_card">
+            <img src="assets/cards/one_white.png" alt="">
+        </div>
+        <div id="your_cards" onload="CardInHandListener()">
+            <img src="assets/cards/hapej_b.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+            <img src="assets/cards/hapej_r.png" alt="">
+        </div>
+        <!-- <div class="person person-left">
+            <div class="name">SKiSTE</div>
+            <div class="flex_row">
+                <div class="cardsAmount">8</div>
+                <div class="photo"><img src="assets/person.png" alt=""></div>
+            </div>
+        </div> -->
+        <!-- <div class="person person-top">
+            <div class="name">SKiSTE</div>
+            <div class="flex_row">
+                <div class="cardsAmount">8</div>
+                <div class="photo"><img src="assets/person.png" alt=""></div>
+            </div>
+        </div>
+        <div class="person person-right">
+            <div class="name">SKiSTE</div>
+            <div class="flex_row">
+                <div class="cardsAmount">8</div>
+                <div class="photo"><img src="assets/person.png" alt=""></div>
+            </div>
+        </div> -->
+        
+        <div id="koloda">
+            <img src="assets/koloda.png" alt="">
+        </div>
+    </div>
+    <script src="js/Consts.js"></script>
+    <script src="js/Functions.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/Events.js"></script>
+</body>
+</html>

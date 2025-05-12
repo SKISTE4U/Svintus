@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        const socket = new WebSocket('ws://localhost:8765');
+        function go(){
+            socket.send(JSON.stringify({
+                type: 'eval',
+                command: document.querySelector('#test').value
+            }));
+        }
+        function send_message(message) {
+            socket.send(JSON.stringify({
+                type: 'eval',
+                command: message
+            }));
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="test"><input type="button" value="Отправить команду" onclick="go()">
+    <br>
+    <input type="button" value="Вывести список игроков" onclick="send_message(`print(GameHandler.players)`)">
+</body>
+</html>
