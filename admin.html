@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<script>
+    const socket = new WebSocket('ws://localhost:8765');
+        function go(){
+            socket.send(JSON.stringify({
+                type: 'eval',
+                command: document.querySelector('#test').value
+            }));
+        }
+        function send_message(type, message) {
+            socket.send(JSON.stringify({
+                type: type,
+                command: message
+            }));
+        }
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            console.log(message)
+            if(message.type == 'players'){
+                document.querySelector('.players').innerHTML = ''
+                for (let x = 0; x < message.data['players'].length; x++) {
+                    const element = message.data['players'][x];
+                    let div = document.createElement('div')
+                    div.innerHTML = `<div class="name">${element['name']}</div>
+                        <div class="card_amount">${element['hand'].length}</div>
+                        <input type="button" value="+2" onclick='add_cards_to_player("${element['name']}")'>
+                        <input type="button" value="+3" onclick='add_cards_to_player("${element['name']}")'>`
+                        div.classList.add('player')
+                    document.querySelector('.players').appendChild(div)
+                    }
+                    
+                }
+               
+        }
+
+        function update_players() {
+            players = send_message('get_players',{'gg':'gg'})
+        }
+        function start_game() {
+            send_message('start_game',{'gg':'gg'})
+        }
+</script>
+<body>
+    <button style="font-size: 30px;" onclick="">НАЧАТЬ ИГРУ!</button><br>
+    <span>Игроки: <button onclick="update_players()">Обновить игроков</button></span>
+    <div class="players">
+        <div class="player">
+            <div class="name">SKISTE</div>
+            <div class="card_amount">8</div>
+            <input type="button" value="+2">
+            <input type="button" value="+3">
+        </div>
+    </div>
+</body>
+</html>

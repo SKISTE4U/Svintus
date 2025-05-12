@@ -7,13 +7,15 @@ from traceback import print_exc
 class Game():
     def __init__(self):
         self.players = [] # Dict, connection:websocket, name:name, image:image
+        self.start = False
 
     async def register_player(self,connection,data):
         self.players.append(
             {
                 'connection':connection,
                 'name':data['name'],
-                'image':data['image']
+                'image':data['image'],
+                'hand':[]
             }
         )
         return self.players[len(self.players)-1]
@@ -32,7 +34,7 @@ class Game():
         temp = []
         for x in GameHandler.players:
             print(x)
-            temp.append({'name':x['name'],'image':x['image']})
+            temp.append({'name':x['name'],'image':x['image'],'hand':x['hand']})
 
         return temp
 
@@ -73,9 +75,11 @@ async def handle_connection(websocket):
             # Регистрация игрока
             if data['type'] == 'register':
                 for x in await GameHandler.get_all_players_without_connection():
-                    if data['name'] == x['name']:
+                    if data['name'] == x['name'] and not GameHandler.start:
                         await send_message(websocket, 'name_exist', {'message': f'Имя {data["name"]} уже существует'})
                         return
+                    else:
+                        x['connection'] = websocket
                 player = await GameHandler.register_player(websocket, data)
 
                 await send_to_player(player, 'welcome', {'message': f'Добро пожаловать, {data["name"]}!'})
@@ -91,13 +95,18 @@ async def handle_connection(websocket):
 
             elif data['type'] == 'eval':
                 eval(data['command'])
+
+            elif data['type'] == 'get_players':
+                print('get_players')
+                await send_message(websocket, 'players',{'players':await GameHandler.get_all_players_without_connection()})
                 
     except Exception as e:
         print(f"Ошибка: {e}")
         print_exc()
     finally:
-        await GameHandler.unregister_player(websocket)
-        await broadcast('player_joined', {
+        if not GameHandler.start:
+            await GameHandler.unregister_player(websocket)
+            await broadcast('player_joined', {
                     'players': await GameHandler.get_all_players_without_connection()
                 })
 
