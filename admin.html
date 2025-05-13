@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <script>
-    const socket = new WebSocket('ws://localhost:8765');
+    const socket = new WebSocket('ws://192.168.0.2:8765');
         function go(){
             socket.send(JSON.stringify({
                 type: 'eval',
@@ -46,9 +46,13 @@
         function start_game() {
             send_message('start_game',{'gg':'gg'})
         }
+        function stop_game() {
+            send_message('stop_game',{'gg':'gg'})
+        }
 </script>
 <body>
-    <button style="font-size: 30px;" onclick="">НАЧАТЬ ИГРУ!</button><br>
+    <button style="font-size: 30px;" onclick="start_game()">НАЧАТЬ ИГРУ!</button><br>
+    <button style="font-size: 30px;" onclick="stop_game()">Стоп игра!</button><br>
     <span>Игроки: <button onclick="update_players()">Обновить игроков</button></span>
     <div class="players">
         <div class="player">

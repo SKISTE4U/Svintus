@@ -3,11 +3,18 @@ import websockets
 import json
 from typing import Dict, List
 from traceback import print_exc
+from random import randint,choice
 
 class Game():
     def __init__(self):
         self.players = [] # Dict, connection:websocket, name:name, image:image
+        self.current_card = ''
         self.start = False
+        self.cards_num=['0','1','2','3','4','5','6','7']
+        self.cards_spec = ['hapej','perehruk','tihohrun','zahrapin','hlopkopit']
+        self.cards_gray = ['polisvin']
+        self.colors = ['r','g','b','y']
+        self.turnaround = True
 
     async def register_player(self,connection,data):
         self.players.append(
@@ -23,6 +30,7 @@ class Game():
     async def unregister_player(self,websocket):
         for x in self.players:
             if websocket == x['connection']:
+                websocket.close()
                 self.players.remove(x)
 
     async def unregister_player_by_name(self,name):
@@ -33,10 +41,28 @@ class Game():
     async def get_all_players_without_connection(self):
         temp = []
         for x in GameHandler.players:
-            print(x)
+            # print(x)
             temp.append({'name':x['name'],'image':x['image'],'hand':x['hand']})
-
         return temp
+    
+    def give_card_to_player(self,player_name):
+        for x in range(0,len(self.players)):
+            if player_name == self.players[x]['name']:
+                random_int = randint(0,100)
+                # 40 спец карт - 35%
+                # 8 серых - 7% 
+                # 64 цифр - 58%
+                if random_int < 70:
+                    self.players[x]["hand"].append(choice(self.cards_num)+'_'+choice(self.colors))
+                elif random_int >= 70 and random_int < 90:
+                    self.players[x]["hand"].append(choice(self.cards_spec)+'_'+choice(self.colors))
+                else:
+                    self.players[x]["hand"].append(choice(self.cards_gray))
+    
+    def give_all_8_cards(self):
+        for x in range(20):
+            for i in self.players:
+                self.give_card_to_player(i['name'])
 
 
 
@@ -67,7 +93,7 @@ async def broadcast(message_type, data, exclude=None):
 async def handle_connection(websocket):
     """Обработка нового подключения"""
 
-    print('New Handle')
+    print('New message')
     try:
         async for message in websocket:
             data = json.loads(message)
@@ -77,11 +103,10 @@ async def handle_connection(websocket):
                 for x in await GameHandler.get_all_players_without_connection():
                     if data['name'] == x['name'] and not GameHandler.start:
                         await send_message(websocket, 'name_exist', {'message': f'Имя {data["name"]} уже существует'})
+                        print('return')
                         return
-                    else:
-                        x['connection'] = websocket
                 player = await GameHandler.register_player(websocket, data)
-
+                
                 await send_to_player(player, 'welcome', {'message': f'Добро пожаловать, {data["name"]}!'})
                 
                 await broadcast('player_joined', {
@@ -99,6 +124,19 @@ async def handle_connection(websocket):
             elif data['type'] == 'get_players':
                 print('get_players')
                 await send_message(websocket, 'players',{'players':await GameHandler.get_all_players_without_connection()})
+
+            elif data['type'] == 'start_game':
+                print('START GAME!')
+                GameHandler.give_all_8_cards()
+                GameHandler.current_card = choice(GameHandler.cards_num)+'_'+choice(GameHandler.colors)
+                await broadcast('start_game',{'players':await GameHandler.get_all_players_without_connection(),'start_card':GameHandler.current_card})
+                GameHandler.start = True
+                
+            elif data['type'] == 'stop_game':
+                print('stop_game')
+                GameHandler.start = False
+                await broadcast('stop_game',{'reload':True})
+                GameHandler.players = []
                 
     except Exception as e:
         print(f"Ошибка: {e}")
@@ -109,10 +147,14 @@ async def handle_connection(websocket):
             await broadcast('player_joined', {
                     'players': await GameHandler.get_all_players_without_connection()
                 })
+        else:
+            websocket.close()
+
+        
 
 async def main():
-    async with websockets.serve(handle_connection, "localhost", 8765):
-        print("Сервер запущен на ws://localhost:8765")
+    async with websockets.serve(handle_connection, "192.168.0.2", 8765):
+        # print("Сервер запущен на ws://localhost:8765")
         await asyncio.Future()  # бесконечный цикл
 
 if __name__ == "__main__":

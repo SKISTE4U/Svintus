@@ -26,7 +26,7 @@
             </div>
             <div class="name_input">
                 <input type="text" placeholder="Имя" id="MY_NAME" value="test">
-                <input type="text" placeholder="Айпишник сервера" id="SERVER_IP" value="localhost:8765">
+                <input type="text" placeholder="Айпишник сервера" id="SERVER_IP" value="192.168.0.2:8765">
             </div>
             <div class="submit">
                 <button onclick="JoinTheGame()">Войти в игру</button>
@@ -37,10 +37,6 @@
         <h1>Произошла пауза</h1>
         <h3>Игроки:</h3>
         <div class="loading_players">
-            <!-- <div class="loading_player">
-                <img src="assets/avatars/baba.jpg" alt="">
-                <span>SKISTE</span>
-            </div> -->
         </div>
     </div>
     <div id="ui">
@@ -48,7 +44,7 @@
 
         </div>
         <div id="main_card">
-            <img src="assets/cards/one_white.png" alt="">
+            <img src="assets/cards/one_white.png" id="current_card" alt="">
         </div>
         <div id="your_cards" onload="CardInHandListener()">
             <img src="assets/cards/hapej_b.png" alt="">
@@ -87,11 +83,12 @@
             </div>
         </div> -->
         
-        <div id="koloda">
-            <img src="assets/koloda.png" alt="">
+        <div id="koloda" onclick="takeCard()">
+            <img src="assets/cards/backflip.png" alt="">
         </div>
     </div>
     <script src="js/Consts.js"></script>
+    <script src="js/Game.js"></script>
     <script src="js/Functions.js"></script>
     <script src="js/main.js"></script>
     <script src="js/Events.js"></script>
