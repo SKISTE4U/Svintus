@@ -135,25 +135,21 @@ async def handle_connection(websocket):
             elif data['type'] == 'stop_game':
                 print('stop_game')
                 GameHandler.start = False
-                await broadcast('stop_game',{'reload':True})
+                await broadcast('stop_game',{'reload':True,'Error':True})
                 GameHandler.players = []
                 
     except Exception as e:
         print(f"Ошибка: {e}")
         print_exc()
     finally:
-        if not GameHandler.start:
-            await GameHandler.unregister_player(websocket)
-            await broadcast('player_joined', {
-                    'players': await GameHandler.get_all_players_without_connection()
-                })
-        else:
-            websocket.close()
+        await GameHandler.unregister_player(websocket)
+        await broadcast('stop_game', {'reload':True,'Error':True})
+        GameHandler.players = []
 
         
 
 async def main():
-    async with websockets.serve(handle_connection, "192.168.0.2", 8765):
+    async with websockets.serve(handle_connection, "localhost", 8765):
         # print("Сервер запущен на ws://localhost:8765")
         await asyncio.Future()  # бесконечный цикл
 

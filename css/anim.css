@@ -6,3 +6,35 @@
         opacity: 0;
     }
 }
+@keyframes opacity_up {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+/* cubic-bezier(1,2.06,.54,.83) */
+@keyframes ColorPickerShow {
+    0%{
+        transform: scale(0) rotate(0);
+        opacity: 0;
+    }
+    100%{
+        transform: scale(1) rotate(405deg);
+        opacity: 1;
+    }
+}
+
+/* cubic-bezier(.63,-0.61,.9,.79) */
+@keyframes ColorPickerRemove {
+    0%{
+        transform: scale(1) rotate(405deg);
+        opacity: 1;
+    }
+    100%{
+        transform: scale(0) rotate(0);
+        opacity: 0;
+    }
+}

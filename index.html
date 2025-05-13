@@ -6,6 +6,8 @@
     <title>Svintus</title>
     <link rel="stylesheet" href="css/anim.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/notify.min.js"></script>
 </head>
 <body>
     <div id="login">
@@ -26,7 +28,7 @@
             </div>
             <div class="name_input">
                 <input type="text" placeholder="Имя" id="MY_NAME" value="test">
-                <input type="text" placeholder="Айпишник сервера" id="SERVER_IP" value="192.168.0.2:8765">
+                <input type="text" placeholder="Айпишник сервера" id="SERVER_IP" value="localhost:8765">
             </div>
             <div class="submit">
                 <button onclick="JoinTheGame()">Войти в игру</button>
@@ -40,6 +42,17 @@
         </div>
     </div>
     <div id="ui">
+        <div class="color_picker">
+            <span>
+                <div class="one_color red"></div>
+                <div class="one_color green"></div>
+            </span>
+            <span>
+                <div class="one_color yellow"></div>
+                <div class="one_color blue"></div>
+            </span>
+            
+        </div>
         <div id="players">
 
         </div>

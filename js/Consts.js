@@ -5,6 +5,7 @@ var PickedImage = 'no_user.png'
 var MyName = ''
 var PickInterval = 100
 var MyHandVar = []
+var LastPlayed = ''
 
 var nums_cards = [
     '0_r','1_r','2_r','3_r','4_r','5_r','6_r','7_r',
@@ -30,4 +31,5 @@ var HAND_POS = document.querySelector('#your_cards').getBoundingClientRect()
 
 
 KOLODA_POS = [KOLODA_POS.left,KOLODA_POS.top]
-HAND_POS = [HAND_POS.left+(HAND_POS.width/2),HAND_POS.top+(HAND_POS.height/3)]
+HAND_POS = [HAND_POS.left+(HAND_POS.width/1.4),HAND_POS.top+(HAND_POS.height/3)]
+// HAND_POS = [HAND_POS.left,HAND_POS.top+(HAND_POS.height/3)]

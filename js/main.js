@@ -82,6 +82,10 @@ function JoinTheGame() {
             case 'stop_game':
                 console.log(message['data']['reload'])
                 if(message['data']['reload']){
+                    if(message['data']['Error']){
+                        console.log()
+                        alert('Произошла ошибка (Кто то отключился от игры)')
+                    }
                     location.reload()
                 }
                 break

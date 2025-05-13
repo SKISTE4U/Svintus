@@ -7,6 +7,14 @@
     --green: #55a12a;
 }
 
+/*
+zIndexes:
+1 - background
+2 - cards and other shit on table
+3 - overlay
+*/
+
+
 *{
     /* outline: 1px solid green; */
 }
@@ -20,13 +28,9 @@ body{
     height: 100vh;
     transition: all 1s;
 }
-#game{
-    position: absolute;
-    z-index: 5;
-}
 #ui{
     position: absolute;
-    z-index: 10;
+    z-index: 1;
     width: 100%;
     height: 100%;
 }
@@ -58,7 +62,7 @@ body{
     position: absolute;
     cursor: pointer;
     border: solid black 1px;
-    z-index: 10;
+    z-index: 2;
     background: black;
 }
 
@@ -72,14 +76,15 @@ body{
     position: absolute;
     cursor: pointer;
     border: solid black 1px;
-    z-index: 10;
+    z-index: 2;
     background: black;
+    animation: opacity_up .3s forwards;
 }
 #ui #your_cards img:hover{
     /* border: 3px solid red; */
     height: 150px;
     transform: translateY(-50px);
-    z-index: 20;
+    z-index: 999;
     
     /* width: 50%; */
 }
@@ -159,7 +164,7 @@ body{
     height: 100vh;
     position: absolute;
     backdrop-filter: blur(10px);
-    z-index: 20;
+    z-index: 4;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -206,7 +211,7 @@ body{
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    z-index: 11;
+    z-index: 3;
 }
 #loading .loading_players{
     display: flex;
@@ -238,4 +243,52 @@ body{
 }
 .can_play{
     margin-bottom: 20px;
+}
+#ui .color_picker{
+    display: flex;
+    position: absolute;
+    z-index: 20;
+    left: calc(50% - 75px);
+    top: calc(50% - 75px);
+    transform: rotate(45deg);
+    /* animation: ColorPickerShow .5s forwards cubic-bezier(1,2.06,.54,.83); */
+    display: none;
+}
+#ui .color_picker .one_color{
+    width: 75px;
+    height: 75px;
+    position: relative;
+    z-index: 7;
+    transition: all .3s;
+    outline: 2px solid black;
+}
+#ui .color_picker .red{
+    background: red;
+    border-top-left-radius: 999px;
+    
+    transform-origin: 100% 100%;
+}
+#ui .color_picker .blue{
+    background: blue;
+    border-bottom-right-radius: 999px;
+    transform-origin: 0% 0%;
+}
+#ui .color_picker .green{
+    background: green;
+    border-bottom-left-radius: 999px;
+    transform-origin: 100% 0%;
+}
+#ui .color_picker .yellow{
+    background: yellow;
+    border-top-right-radius: 999px;
+    transform-origin: 0% 100%;
+}
+#ui .color_picker .one_color:hover{
+    transform: scale(1.3);
+    z-index: 10;
+}
+#ui .color_picker span{
+    display:inline;
+    grid-column: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
 }
