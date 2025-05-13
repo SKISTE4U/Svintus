@@ -5,7 +5,10 @@ var PickedImage = 'no_user.png'
 var MyName = ''
 var PickInterval = 100
 var MyHandVar = []
-var LastPlayed = ''
+var LastPlayed = []
+var CanPlayAfterDouble = false
+var can_play_more = false
+var Polisvin = false
 
 var nums_cards = [
     '0_r','1_r','2_r','3_r','4_r','5_r','6_r','7_r',

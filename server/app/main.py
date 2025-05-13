@@ -58,10 +58,19 @@ class Game():
                     self.players[x]["hand"].append(choice(self.cards_spec)+'_'+choice(self.colors))
                 else:
                     self.players[x]["hand"].append(choice(self.cards_gray))
+
+    def _give_one_card(self,player_name,card):
+        for x in range(0,len(self.players)):
+            if player_name == self.players[x]['name']:
+                self.players[x]["hand"].append(card)
     
     def give_all_8_cards(self):
-        for x in range(20):
-            for i in self.players:
+        for i in self.players:
+            self._give_one_card(i['name'],'1_r')
+            self._give_one_card(i['name'],'1_r')
+            self._give_one_card(i['name'],'1_r')
+            self._give_one_card(i['name'],'1_r')
+            for x in range(20):
                 self.give_card_to_player(i['name'])
 
 

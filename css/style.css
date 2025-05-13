@@ -252,6 +252,7 @@ body{
     top: calc(50% - 75px);
     transform: rotate(45deg);
     /* animation: ColorPickerShow .5s forwards cubic-bezier(1,2.06,.54,.83); */
+    /* animation-iteration-count: infinite; */
     display: none;
 }
 #ui .color_picker .one_color{

@@ -194,3 +194,46 @@ function animateToCenter(element, duration = 500, container = window, callback) 
     // Запускаем анимацию
     requestAnimationFrame(animate);
 }
+
+function animateColorPicker(color) {
+    let div = document.createElement('div')
+
+    div.style.position = 'absolute'
+    div.style.borderRadius = '50%'
+    div.style.zIndex = -1
+    div.style.left = (window.innerWidth / 2) - 20+'px'
+    div.style.top = (window.innerHeight / 2) - 20+'px'
+    div.style.width = 40+'px'
+    div.style.height = 40+'px'
+    div.style.animation = 'opacity_and_scale_up 1.5s forwards'
+    // div.style.animation = 'opacity_and_scale_up 1.5s infinite'
+
+    if(color == 'r'){
+        div.style.background = 'radial-gradient(circle,rgba(42, 123, 155, 0) 0%, rgb(237, 83, 83) 50%, transparent 70%, rgba(237, 221, 83, 0) 100%)'
+    }
+    else if(color == 'b'){
+        div.style.background = 'radial-gradient(circle,rgba(42, 123, 155, 0) 0%, rgb(83, 137, 237) 50%, transparent 70%, rgba(237, 221, 83, 0) 100%)'
+    }
+    else if(color == 'y'){
+        div.style.background = 'radial-gradient(circle,rgba(42, 123, 155, 0) 0%, rgba(237, 221, 83, 1) 50%, transparent 70%, rgba(237, 221, 83, 0) 100%)'
+    }
+    else if(color == 'g'){
+        div.style.background = 'radial-gradient(circle,rgba(42, 123, 155, 0) 0%, rgb(101, 237, 83) 50%, transparent 70%, rgba(237, 221, 83, 0) 100%)'
+    }
+
+
+    document.body.appendChild(div)
+    setTimeout(function () {
+        div.remove()
+    },1500)
+}
+
+function checkStringInArray(str, arr) {
+    const count = arr.filter(item => item === str).length;
+    
+    if (count > 0) {
+      return { found: true, count: count };
+    } else {
+      return { found: false, count: 0 };
+    }
+  }
