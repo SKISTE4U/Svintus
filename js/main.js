@@ -1,3 +1,9 @@
+function send_message(type,data) {
+    socket.send(JSON.stringify({
+            type: type,
+            data: data
+        }))
+}
 
 function JoinTheGame() {
     let ip = document.querySelector('#SERVER_IP').value
@@ -9,15 +15,23 @@ function JoinTheGame() {
         alert('Нету либо сервака, либо имени, перепроверь')
         return
     }
-    socket = new WebSocket('ws://'+ip);
-    socket.onopen = () => {
-        socket.send(JSON.stringify({
+    window.socket = new WebSocket('ws://'+ip);
+    window.socket.onclose = () => {
+        alert('Произошел разрыв соеденения, перезапускаю страницу')
+        location.reload()
+    }
+    window.socket.onerror = () => {
+        alert('Произошла какая то ошибка в подключении по протоколу, перезапускаю страницу')
+        location.reload()
+    }
+    window.socket.onopen = () => {
+        window.socket.send(JSON.stringify({
             type: 'register',
             name: name,
             image:PickedImage
         }));
     }
-    socket.onmessage = (event) => {
+    window.socket.onmessage = (event) => {
         const message = JSON.parse(event.data);
         console.log('Получено:', message);
         
@@ -89,6 +103,20 @@ function JoinTheGame() {
                     location.reload()
                 }
                 break
+
+            case 'played_card':
+                let current_card = document.querySelector('#current_card')
+                current_card.src = 'assets/cards/'+message['data']['card']+'.png'
+                animatePlayedCardFromAnotherPlayer(message['data']['card'],message['data']['name'])
+                PlayebleCardsHighlight()
+                break
+
+            case 'polisvin':
+                // let current_card = document.querySelector('#current_card')
+                // current_card.src = 'assets/cards/polisvin_'+message['data']['color']+'.png'
+                PolisvinPickColor(message['data']['color'], false)
+                PlayebleCardsHighlight()
+                break
         }
     };
 }
@@ -126,50 +154,3 @@ function pick_image(picked_element) {
     let name = picked_element.src.split('/').at(-1)
     PickedImage = name
 }
-function arrangePlayersInSemicircle(players) {
-    const container = document.querySelector('#players');
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const radius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
-
-    for (let x = 0; x < players.length; x++) {
-        const element = players[x];
-        if(element['name'] == MyName){
-            players.splice(x,1)
-        }
-    }
-    
-    container.innerHTML = '';
-    
-    // Углы для настоящего полукруга (от -90° до +90° относительно центра)
-    const startAngle = -Math.PI;  // -90 градусов (крайний левый)
-    const endAngle = 0;      // +90 градусов (крайний правый)
-    const angleStep = (endAngle - startAngle) / (players.length - 1 || 1);
-    console.log(players.length)
-    
-    for (let i = 0; i < players.length;i++) {
-        console.log('aaa')
-        const element = players[i]
-        
-        const player = document.createElement('div');
-        player.className = 'person';
-        player.innerHTML = `
-        <div class="name">${element['name']}</div>
-                <div class="flex_row">
-                    <div class="cardsAmount">${element['hand'].length}</div>
-                    <div class="photo"><img src="assets/avatars/${element['image']}" alt=""></div>
-                </div>`
-        container.appendChild(player);
-        
-        const angle = startAngle + angleStep * i;
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
-        
-        player.style.left = `${x - 80}px`;  // 50 = половина ширины игрока
-        player.style.top = `${y - 75}px`;   // 75 = половина высоты
-        
-        // Поворот карт/аватаров к центру
-        const degrees = angle * (180/Math.PI);
-        //   player.style.transform = `rotate(${degrees}deg)`;
-    }
-  }

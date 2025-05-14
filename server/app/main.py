@@ -15,6 +15,7 @@ class Game():
         self.cards_gray = ['polisvin']
         self.colors = ['r','g','b','y']
         self.turnaround = True
+        self.turn = 0
 
     async def register_player(self,connection,data):
         self.players.append(
@@ -69,7 +70,6 @@ class Game():
             self._give_one_card(i['name'],'1_r')
             self._give_one_card(i['name'],'1_r')
             self._give_one_card(i['name'],'1_r')
-            self._give_one_card(i['name'],'1_r')
             for x in range(20):
                 self.give_card_to_player(i['name'])
 
@@ -102,51 +102,71 @@ async def broadcast(message_type, data, exclude=None):
 async def handle_connection(websocket):
     """Обработка нового подключения"""
 
-    print('New message')
+    print('New connect!')
+    for x in GameHandler.players:
+        if websocket == x['connection']:
+            print(str(x['name']))
     try:
         async for message in websocket:
             data = json.loads(message)
+            print(data)
+            print('New message')
             
             # Регистрация игрока
-            if data['type'] == 'register':
-                for x in await GameHandler.get_all_players_without_connection():
-                    if data['name'] == x['name'] and not GameHandler.start:
-                        await send_message(websocket, 'name_exist', {'message': f'Имя {data["name"]} уже существует'})
-                        print('return')
-                        return
-                player = await GameHandler.register_player(websocket, data)
-                
-                await send_to_player(player, 'welcome', {'message': f'Добро пожаловать, {data["name"]}!'})
-                
-                await broadcast('player_joined', {
-                    'players': await GameHandler.get_all_players_without_connection()
-                })
-                
-            # Логика игры (пример)
-            elif data['type'] == 'play_card':
-                # Обработка хода игрока
-                pass
+            try:
+                if data['type'] == 'register':
+                    for x in await GameHandler.get_all_players_without_connection():
+                        if data['name'] == x['name']:
+                            await send_message(websocket, 'name_exist', {'message': f'Имя {data["name"]} уже существует'})
+                            print('return')
+                            return
+                    player = await GameHandler.register_player(websocket, data)
+                    
+                    await send_to_player(player, 'welcome', {'message': f'Добро пожаловать, {data["name"]}!'})
+                    
+                    await broadcast('player_joined', {
+                        'players': await GameHandler.get_all_players_without_connection()
+                    })
+                    
+                # Логика игры (пример)
 
-            elif data['type'] == 'eval':
-                eval(data['command'])
+                elif data['type'] == 'eval':
+                    eval(data['command'])
 
-            elif data['type'] == 'get_players':
-                print('get_players')
-                await send_message(websocket, 'players',{'players':await GameHandler.get_all_players_without_connection()})
+                elif data['type'] == 'get_players':
+                    print('get_players')
+                    await send_message(websocket, 'players',{'players':await GameHandler.get_all_players_without_connection()})
 
-            elif data['type'] == 'start_game':
-                print('START GAME!')
-                GameHandler.give_all_8_cards()
-                GameHandler.current_card = choice(GameHandler.cards_num)+'_'+choice(GameHandler.colors)
-                await broadcast('start_game',{'players':await GameHandler.get_all_players_without_connection(),'start_card':GameHandler.current_card})
-                GameHandler.start = True
-                
-            elif data['type'] == 'stop_game':
-                print('stop_game')
-                GameHandler.start = False
-                await broadcast('stop_game',{'reload':True,'Error':True})
-                GameHandler.players = []
-                
+                elif data['type'] == 'start_game':
+                    print('START GAME!')
+                    GameHandler.give_all_8_cards()
+                    GameHandler.current_card = choice(GameHandler.cards_num)+'_'+choice(GameHandler.colors)
+                    await broadcast('start_game',{'players':await GameHandler.get_all_players_without_connection(),'start_card':GameHandler.current_card})
+                    GameHandler.start = True
+                    
+                elif data['type'] == 'stop_game':
+                    print('stop_game')
+                    GameHandler.start = False
+                    await broadcast('stop_game',{'reload':True,'Error':True})
+                    GameHandler.players = []
+
+                elif data['type'] == 'play_card':
+                    for x in GameHandler.players:
+                        if websocket == x['connection']:
+                            name = x['name']
+                    print(name)
+                    if(data['data']['next_turn']):
+                        await broadcast('played_card',{'card':data['data']['card'], 'next_turn':data['data']['next_turn'], 'turn': GameHandler.turn, 'name':name},exclude=websocket)
+                    else:
+                        GameHandler.turn = GameHandler.turn + 1
+                        if GameHandler.turn > len(GameHandler.players):
+                            GameHandler.turn = 0
+                        await broadcast('played_card',{'card':data['data']['card'], 'next_turn':data['data']['next_turn'], 'turn': GameHandler.turn, 'name':name})
+
+                elif data['type'] == 'polisvin':
+                    await broadcast('polisvin',{'color':data['data']['color']})
+            except:
+                print_exc()
     except Exception as e:
         print(f"Ошибка: {e}")
         print_exc()
@@ -158,7 +178,7 @@ async def handle_connection(websocket):
         
 
 async def main():
-    async with websockets.serve(handle_connection, "localhost", 8765):
+    async with websockets.serve(handle_connection, "192.168.0.2", 8765):
         # print("Сервер запущен на ws://localhost:8765")
         await asyncio.Future()  # бесконечный цикл
 

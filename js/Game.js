@@ -3,8 +3,6 @@ function CanPlayThisCard(card) {
     let current_card = document.querySelector('#current_card').src.split('/').at(-1).split('.')[0]
     let current_card_name = current_card.split('_')[0]
     let current_card_color = current_card.split('_')[1]
-    console.log(card)
-    
     if(card == 'polisvin'){
         return true
     }
@@ -36,7 +34,6 @@ function PlayebleCardsHighlight() {
     for (let x = 0; x < cards.length; x++) {
         const element = cards[x].src.split('/').at(-1).split('.')[0];
         cards[x].removeAttribute('class')
-        console.log(element)
         if(CanPlayThisCard(element)){
             cards[x].classList.add('can_play')
         }
@@ -91,7 +88,7 @@ function play_card(e){
         console.log('Сыграл - '+card_name)
         animateToCenter(card,500)
         document.getElementById('current_card').src = 'assets/cards/'+card_name+'.png'
-        PlayebleCardsHighlight()
+        
         if(card_name == 'polisvin'){
             let color_picker = document.querySelector('.color_picker')
             color_picker.style.display = 'flex'
@@ -110,14 +107,17 @@ function play_card(e){
     if(CanPlayMore()){
         can_play_more = true
         $.notify('Вы можете сделать еще один ход','success')
+        send_message('play_card',{card:card_name,next_turn:false})
     }
     else{
+        PlayebleCardsHighlight()
         can_play_more = false
         $.notify('Ход закончился')
+        send_message('play_card',{card:card_name,next_turn:false})
     }
 }
 
-function PolisvinPickColor(color) {
+function PolisvinPickColor(color, sendMessage = true) {
     document.getElementById('current_card').src = 'assets/cards/polisvin_'+color+'.png'
     Polisvin = false
     let color_picker = document.querySelector('.color_picker')
@@ -129,6 +129,10 @@ function PolisvinPickColor(color) {
         PlayebleCardsHighlight()
     }
     animateColorPicker(color)
+    if(sendMessage){
+        send_message('polisvin',{"color":color})
+    }
+    
 }
 
 
