@@ -186,12 +186,11 @@ body{
 #login .login_wrapper .image_picker{
     display: flex;
     flex-direction: row;
-    /* padding-left: 10px;
-    padding-right: 10px;
-    box-sizing: border-box; */
+    flex-wrap: wrap;
     gap: 10px;
     max-width: 90%;
     overflow-x: auto;
+    max-height: calc(3 * 95px);
 }
 #login .login_wrapper .image_picker img{
     width: 75px;

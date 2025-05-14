@@ -5,6 +5,30 @@ function send_message(type,data) {
         }))
 }
 
+function OnLoadBodyEvent() {
+    // Image picker for start game
+    let image_picker = document.querySelector('.image_picker')
+    let available_images = [
+        'avatar1.jpeg','baba.jpg','frog.webp',
+        'minion.jpg','motobike.jpg','ok.jpg',
+        'podslushano.jpg','skeleton.jpg','spongebob.jpg',
+        'wolf.jpg','ok1.jpeg','ok2.jpg',
+        'ok3.webp','ok4.gif','cat.gif',
+        'goat.gif','monkey.gif','avatar.gif',
+        'cat2.gif','skeleton.gif','cat3.gif',
+        'woman.gif','porn.gif','poop.gif',
+        'man.gif','anime.gif','kaneki.gif',
+        'tomato.gif','dick.gif','dick1.gif'
+    ]
+    for (let x = 0; x < available_images.length; x++) {
+        const element = available_images[x];
+        let img = document.createElement('img')
+        img.setAttribute('onclick','pick_image(this)')
+        img.src = 'assets/avatars/'+element
+        image_picker.appendChild(img)
+    }
+}
+
 function JoinTheGame() {
     let ip = document.querySelector('#SERVER_IP').value
     let name = document.querySelector('#MY_NAME').value

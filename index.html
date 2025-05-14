@@ -9,22 +9,12 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/notify.min.js"></script>
 </head>
-<body>
+<body onload="OnLoadBodyEvent()">
     <div id="login">
         <div class="login_wrapper">
             <h3>Вход</h3>
             <div class="image_picker">
-                <img onclick="pick_image(this)" src="assets/avatars/avatar1.jpeg" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/baba.jpg" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/frog.webp" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/minion.jpg" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/motobike.jpg" alt="" srcset="">
                 <img onclick="pick_image(this)" src="assets/avatars/no_user.png" class="picked_image" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/ok.jpg" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/podslushano.jpg" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/skeleton.jpg" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/spongebob.jpg" alt="" srcset="">
-                <img onclick="pick_image(this)" src="assets/avatars/wolf.jpg" alt="" srcset="">
             </div>
             <div class="name_input">
                 <input type="text" placeholder="Имя" id="MY_NAME" value="test">
