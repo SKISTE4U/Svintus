@@ -28,7 +28,7 @@
             </div>
             <div class="name_input">
                 <input type="text" placeholder="Имя" id="MY_NAME" value="test">
-                <input type="text" placeholder="Айпишник сервера" id="SERVER_IP" value="192.168.0.2:8765">
+                <input type="text" placeholder="Айпишник сервера" id="SERVER_IP" value="localhost:8765">
             </div>
             <div class="submit">
                 <button onclick="JoinTheGame()">Войти в игру</button>
@@ -40,6 +40,12 @@
         <h3>Игроки:</h3>
         <div class="loading_players">
         </div>
+    </div>
+    <div class="turn_around">
+        <img src="assets/rotate.png" alt="" srcset="">
+    </div>
+    <div class="turn">
+        <img src="assets/turn_circle.png" alt="">
     </div>
     <div id="ui">
         <div class="color_picker">
@@ -54,7 +60,13 @@
             
         </div>
         <div id="players">
-
+            <!-- <div class="person">
+                <div class="name">SKiSTE</div>
+                <div class="flex_row">
+                    <div class="cardsAmount">8</div>
+                    <div class="photo"><img src="assets/person.png" alt=""></div>
+                </div>
+            </div> -->
         </div>
         <div id="main_card">
             <img src="assets/cards/one_white.png" id="current_card" alt="">

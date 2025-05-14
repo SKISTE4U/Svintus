@@ -205,6 +205,71 @@ function animateToCenter(element, duration = 500, container = window, callback) 
     requestAnimationFrame(animate);
 }
 
+function animateElementTo(element, which_turn_element, duration = 500, container = window, callback) {
+    // Получаем текущие computed стили элемента
+    const computedStyle = window.getComputedStyle(element);
+    
+    // Парсим текущие значения left и top (учитываем, что они могут быть 'auto' или содержать 'px')
+    const startX = parseFloat(computedStyle.left) || 0;
+    const startY = parseFloat(computedStyle.top) || 0;
+    
+    // Определяем параметры контейнера
+    let containerWidth, containerHeight, containerLeft, containerTop;
+    
+    if (container === window) {
+        containerWidth = container.innerWidth;
+        containerHeight = container.innerHeight;
+        containerLeft = 0;
+        containerTop = 0;
+    } else {
+        const containerRect = container.getBoundingClientRect();
+        containerWidth = containerRect.width;
+        containerHeight = containerRect.height;
+        containerLeft = containerRect.left;
+        containerTop = containerRect.top;
+    }
+    
+    // Вычисляем конечные координаты относительно текущей позиции элемента
+    const targetRect = which_turn_element.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    
+    // Разница между текущей позицией и целевой
+    // const deltaX = (targetRect.left - elementRect.left) + (targetRect.width - elementRect.width) / 2;
+    // const deltaY = (targetRect.top - elementRect.top) + (targetRect.height - elementRect.height) / 2;
+    // const deltaX = (targetRect.left - elementRect.left);
+    const deltaX = (targetRect.left - elementRect.left) - elementRect.width;
+    const deltaY = (targetRect.top - elementRect.top);
+    
+    // Время начала анимации
+    const startTime = performance.now();
+    
+    // Функция анимации
+    function animate(currentTime) {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
+        
+        // Используем cubic-bezier для плавности
+        const easing = progress < 0.5 
+            ? 4 * progress * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        
+        // Применяем трансформацию относительно начальной позиции
+        element.style.left = (startX + deltaX * easing) + 'px';
+        element.style.top = (startY + deltaY * easing) + 'px';
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }
+    }
+    
+    // Запускаем анимацию
+    requestAnimationFrame(animate);
+}
+
 function animateColorPicker(color) {
     let div = document.createElement('div')
 

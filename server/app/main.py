@@ -155,20 +155,35 @@ async def handle_connection(websocket):
                     GameHandler.start = False
                     await broadcast('stop_game',{'reload':True,'Error':True})
                     GameHandler.players = []
+                    GameHandler.turn = 0
+                    GameHandler.turnaround = True
+                    GameHandler.current_card = ''
 
                 elif data['type'] == 'play_card':
                     for x in GameHandler.players:
                         if websocket == x['connection']:
                             name = x['name']
+                    for x in range(0,len(GameHandler.players)):
+                        if websocket == GameHandler.players[x]:
+                            if x != GameHandler.turn:
+                                await send_message(websocket, 'error',{'message':'Не ваш ход'})
+                                return
+                                
                     GameHandler.remove_card_from_hand(data['data']['card'],websocket)
                     GameHandler.current_card = data['data']['card']
                     print(name)
                     if(data['data']['next_turn']):
                         await broadcast('played_card',{'card':data['data']['card'], 'next_turn':data['data']['next_turn'], 'turn': GameHandler.turn, 'name':name},exclude=websocket)
                     else:
-                        GameHandler.turn = GameHandler.turn + 1
-                        if GameHandler.turn > len(GameHandler.players):
-                            GameHandler.turn = 0
+                        
+                        if GameHandler.turnaround:
+                            GameHandler.turn = GameHandler.turn + 1
+                            if GameHandler.turn > len(GameHandler.players)-1:
+                                GameHandler.turn = 0
+                        else:
+                            GameHandler.turn = GameHandler.turn - 1
+                            if GameHandler.turn < 0:
+                                GameHandler.turn = len(GameHandler.players)-1
                         await broadcast('played_card',{'card':data['data']['card'], 'next_turn':data['data']['next_turn'], 'turn': GameHandler.turn, 'name':name})
 
                 elif data['type'] == 'polisvin':
@@ -193,6 +208,15 @@ async def handle_connection(websocket):
                             break
                     
                     await broadcast('player_take_card',{'taken_card':data['data']['taked_card'], 'name':name},exclude=websocket)
+
+                elif data['type'] == 'change_turnaround':
+                    if GameHandler.turnaround:
+                        GameHandler.turnaround = False
+                    else:
+                        GameHandler.turnaround = True
+
+                    await broadcast('turn_rotate',{'turnaround':GameHandler.turnaround})
+                    
             except:
                 print_exc()
     except Exception as e:
@@ -206,7 +230,7 @@ async def handle_connection(websocket):
         
 
 async def main():
-    async with websockets.serve(handle_connection, "192.168.0.2", 8765):
+    async with websockets.serve(handle_connection, "localhost", 8765):
         # print("Сервер запущен на ws://localhost:8765")
         await asyncio.Future()  # бесконечный цикл
 

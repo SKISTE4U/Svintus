@@ -125,6 +125,8 @@ function JoinTheGame() {
             case 'update':
                 let all_persons = document.querySelector('#players').querySelectorAll('.person')
                 document.querySelector('#current_card').src = 'assets/cards/'+message['data']['current_card']+'.png'
+                current_turn = message['data']['turn']
+                go_turn(current_turn,message['data']['players'])
                 for (let x = 0; x < message['data']['players'].length; x++) {
                     const data = message['data']['players'][x];
                     for (let i = 0; i < all_persons.length; i++) {

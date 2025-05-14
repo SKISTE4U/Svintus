@@ -25,6 +25,33 @@
         transform: scale(15);
     }
 }
+@keyframes turn_around_true {
+    0%{
+        transform: rotate(0deg);
+        opacity: .2;
+    }
+    50%{
+        opacity: .6;
+    }
+    100%{
+        transform: rotate(360deg);
+        opacity: .2;
+    }
+}
+@keyframes turn_around_false {
+    0%{
+        transform: rotate(0deg);
+        opacity: .2;
+    }
+    50%{
+        opacity: .6;
+    }
+    100%{
+        transform: rotate(-360deg);
+        opacity: .2;
+    }
+}
+
 
 /* cubic-bezier(1,2.06,.54,.83) */
 @keyframes ColorPickerShow {

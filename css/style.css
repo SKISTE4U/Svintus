@@ -71,7 +71,7 @@ body{
     height: 150px;
     width: 100px;
     border-radius: 15px;
-    transition: all .2s;
+    transition: all .1s;
     /* overflow: auto; */
     position: absolute;
     cursor: pointer;
@@ -292,4 +292,30 @@ body{
     display:inline;
     grid-column: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
+}
+.turn_around{
+    position: absolute;
+    left: calc(50vw - 10vw);
+    top: calc(50vh - 10vw);
+    width: 20vw;
+    height: 20vw;
+    opacity: .2;
+    /* animation: turn_around_true 2s forwards; */
+    z-index: -1;
+}
+.turn_around img{
+    width: 100%;
+    height: 100%;
+}
+.turn{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    /* background: #6bff75; */
+    border-radius: 50%;
+    z-index: 50;
+}
+.turn img{
+    width: 100%;
+    height: 100%;
 }

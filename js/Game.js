@@ -185,8 +185,47 @@ function AddCardToHand(card_name) {
     let img = document.createElement('img')
     img.src = 'assets/cards/'+card_name+'.png'
     img.addEventListener('click', play_card)
-    hand.appendChild(img)
+    
     animateCardFromTo(card_name,KOLODA_POS,HAND_POS,500)
-    PlayebleCardsHighlight()
+    setTimeout(function(){
+        hand.appendChild(img)
+        CardInHandListener()
+        PlayebleCardsHighlight()
+    },350)
     send_message('update_all',{'gg':'gg'})
+}
+
+function go_turn(turn, players) {
+    let temp = ['circle','rect','triangle','cross']
+    document.querySelector('.turn').querySelector('img').src = 'assets/turn_'+choice(temp)+'.png'
+    let needed_player = players[turn]['name']
+    if(needed_player == MyName){
+        animateElementTo(document.querySelector('.turn'),document.querySelector('#your_cards'))
+    }
+    else{
+        let persons = document.querySelectorAll('.person')
+        for (let x = 0; x < persons.length; x++) {
+            const element = persons[x];
+            console.group('Turn')
+            console.log(element.querySelector('.name').innerHTML)
+            console.log(needed_player)
+            console.groupEnd()
+            if(element.querySelector('.name').innerHTML == needed_player){
+                animateElementTo(document.querySelector('.turn'),element)
+            }
+        }
+    }
+    
+}
+
+function change_turn_around(turnaround) {
+    let div = document.querySelector('.turn_around')
+    if(turnaround){
+        div.querySelector('img').src = 'assets/rotate.png'
+        div.style.animation = 'turn_around_true 2s forwards'
+    }
+    else{
+        div.querySelector('img').src = 'assets/rotate_flip.png'
+        div.style.animation = 'turn_around_false 2s forwards'
+    }
 }
