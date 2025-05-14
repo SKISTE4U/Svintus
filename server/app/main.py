@@ -67,11 +67,17 @@ class Game():
     
     def give_all_8_cards(self):
         for i in self.players:
-            self._give_one_card(i['name'],'1_r')
-            self._give_one_card(i['name'],'1_r')
-            self._give_one_card(i['name'],'1_r')
-            for x in range(20):
+            # self._give_one_card(i['name'],'1_r')
+            # self._give_one_card(i['name'],'1_r')
+            # self._give_one_card(i['name'],'1_r')
+            for x in range(8):
                 self.give_card_to_player(i['name'])
+
+    def remove_card_from_hand(self,card,player_connection):
+        for x in range(0,len(self.players)):
+            if player_connection == self.players[x]['connection']:
+                self.players[x]['hand'].remove(card)
+                return True
 
 
 
@@ -154,6 +160,8 @@ async def handle_connection(websocket):
                     for x in GameHandler.players:
                         if websocket == x['connection']:
                             name = x['name']
+                    GameHandler.remove_card_from_hand(data['data']['card'],websocket)
+                    GameHandler.current_card = data['data']['card']
                     print(name)
                     if(data['data']['next_turn']):
                         await broadcast('played_card',{'card':data['data']['card'], 'next_turn':data['data']['next_turn'], 'turn': GameHandler.turn, 'name':name},exclude=websocket)
@@ -165,6 +173,26 @@ async def handle_connection(websocket):
 
                 elif data['type'] == 'polisvin':
                     await broadcast('polisvin',{'color':data['data']['color']})
+                
+                elif data['type'] == 'update_all':
+                    data = {
+                        'players':await GameHandler.get_all_players_without_connection(),
+                        'turnaround':GameHandler.turnaround,
+                        'turn':GameHandler.turn,
+                        'current_card':GameHandler.current_card
+                        }
+                    print(data)
+                    await broadcast('update',data)
+
+                elif data['type'] == 'take_card':
+                    name = ''
+                    for x in range(0,len(GameHandler.players)):
+                        if GameHandler.players[x]['connection'] == websocket:
+                            GameHandler.players[x]['hand'].append(data['data']['taked_card'])
+                            name = GameHandler.players[x]['name']
+                            break
+                    
+                    await broadcast('player_take_card',{'taken_card':data['data']['taked_card'], 'name':name},exclude=websocket)
             except:
                 print_exc()
     except Exception as e:

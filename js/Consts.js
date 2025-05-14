@@ -27,6 +27,9 @@ var spec_cards = [
 var gray_cards = [
     'polisvin'
 ]
+var colors = [
+    'r','b','g','y'
+]
 
 var KOLODA_POS = document.querySelector('#koloda').getBoundingClientRect()
 var HAND_POS = document.querySelector('#your_cards').getBoundingClientRect()

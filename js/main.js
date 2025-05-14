@@ -117,6 +117,24 @@ function JoinTheGame() {
                 PolisvinPickColor(message['data']['color'], false)
                 PlayebleCardsHighlight()
                 break
+
+            case 'player_take_card':
+                animatePlayedCardFromAnotherPlayer('backflip',message['data']['name'],false)
+                break
+
+            case 'update':
+                let all_persons = document.querySelector('#players').querySelectorAll('.person')
+                document.querySelector('#current_card').src = 'assets/cards/'+message['data']['current_card']+'.png'
+                for (let x = 0; x < message['data']['players'].length; x++) {
+                    const data = message['data']['players'][x];
+                    for (let i = 0; i < all_persons.length; i++) {
+                        const person = all_persons[i];
+                        if(data['name'] == person.querySelector('.name').innerHTML){
+                            person.querySelector('.cardsAmount').innerHTML = message['data']['players'][x]['hand'].length
+                        }
+                        
+                    }
+                }
         }
     };
 }

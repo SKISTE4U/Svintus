@@ -10,6 +10,16 @@ function test() {
     console.log('gg')
 }
 
+function randint(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function choice(arr) {
+    return arr[randint(0,arr.length-1)]
+}
+
 function animateCardFromTo(card_name, from, to, duration = 500, container = window, callback) {
     // Получаем начальные координаты элемента
 
@@ -286,7 +296,7 @@ function checkStringInArray(str, arr) {
     }
   }
 
-function animatePlayedCardFromAnotherPlayer(played_card, player) {
+function animatePlayedCardFromAnotherPlayer(played_card, player, fromPlayer = true) {
     console.log(played_card)
     console.log(player)
     let players = document.querySelector('#players').querySelectorAll('.person')
@@ -295,7 +305,12 @@ function animatePlayedCardFromAnotherPlayer(played_card, player) {
         if (element.querySelector('.name').innerHTML == player){
             let startPos = element.getBoundingClientRect()
             let endPos = document.querySelector('#current_card').getBoundingClientRect()
-            animateCardFromTo(played_card,[startPos.left,startPos.top],[endPos.left,endPos.top])
+            if(fromPlayer){
+                animateCardFromTo(played_card,[startPos.left,startPos.top],[endPos.left,endPos.top])
+            }
+            else{
+                animateCardFromTo(played_card,[endPos.left,endPos.top],[startPos.left,startPos.top])
+            }
         }
     }
 }
