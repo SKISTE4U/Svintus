@@ -243,6 +243,8 @@ function animateElementTo(element, which_turn_element, duration = 500, container
     // Время начала анимации
     const startTime = performance.now();
     
+    element.style.animation = 'opacity_up .5s forwards'
+
     // Функция анимации
     function animate(currentTime) {
         const elapsedTime = currentTime - startTime;

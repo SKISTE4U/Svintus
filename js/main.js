@@ -151,6 +151,7 @@ function JoinTheGame() {
                 let all_persons = document.querySelector('#players').querySelectorAll('.person')
                 document.querySelector('#current_card').src = 'assets/cards/'+message['data']['current_card']+'.png'
                 current_turn = message['data']['turn']
+                LastPlayed = []
                 go_turn(current_turn,message['data']['players'])
                 for (let x = 0; x < message['data']['players'].length; x++) {
                     const data = message['data']['players'][x];
@@ -163,7 +164,7 @@ function JoinTheGame() {
                             document.querySelector('#your_cards').innerHTML = ''
                             for (let y = 0; y < data['hand'].length; y++) {
                                 const element = data['hand'][y];
-                                AddCardToHand(element)
+                                AddCardToHand(element,false)
                             }
                         }
                         
@@ -172,17 +173,20 @@ function JoinTheGame() {
                 break
             case 'error':
                 $.notify(message['data']['message'])
-                send_message('update_all',{'dummy':'dummy'})
+                if(message['data']['error_type'] == 'not_your_turn'){
+                    let hand = message['data']['hand']
+                    document.querySelector('#your_cards').innerHTML = ''
+                    for (let y = 0; y < data['hand'].length; y++) {
+                        const element = data['hand'][y];
+                        AddCardToHand(element,false)
+                    }
+                    document.querySelector('#current_card').src = 'assets/cards/'+message['data']['current_card']+'.png'
+                }
+                // send_message('update_all',{'dummy':'dummy'})
                 break
 
             case 'update_local':
-                let hand = message['data']['hand']
-                document.querySelector('#your_cards').innerHTML = ''
-                for (let y = 0; y < data['hand'].length; y++) {
-                    const element = data['hand'][y];
-                    AddCardToHand(element)
-                }
-                document.querySelector('#current_card').src = 'assets/cards/'+message['data']['current_card']+'.png'
+                
         }
     };
 }

@@ -180,18 +180,25 @@ function clearHand() {
 //     CardInHandListener()
 // }
 
-function AddCardToHand(card_name) {
+function AddCardToHand(card_name, timer = true) {
     let hand = document.querySelector('#your_cards')
     let img = document.createElement('img')
     img.src = 'assets/cards/'+card_name+'.png'
     img.addEventListener('click', play_card)
-    
-    animateCardFromTo(card_name,KOLODA_POS,HAND_POS,500)
-    setTimeout(function(){
+    if(timer){
+        animateCardFromTo(card_name,KOLODA_POS,HAND_POS,500)
+        setTimeout(function(){
+            hand.appendChild(img)
+            CardInHandListener()
+            PlayebleCardsHighlight()
+        },350)
+    }
+    else{
         hand.appendChild(img)
         CardInHandListener()
         PlayebleCardsHighlight()
-    },350)
+    }
+    
     // send_message('update_all',{'gg':'gg'})
 }
 

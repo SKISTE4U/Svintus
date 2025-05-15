@@ -313,6 +313,7 @@ body{
     /* background: #6bff75; */
     border-radius: 50%;
     z-index: 50;
+    opacity: 0;
 }
 .turn img{
     width: 100%;

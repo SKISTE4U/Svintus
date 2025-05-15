@@ -169,8 +169,8 @@ async def handle_connection(websocket):
                         if websocket == x['connection']:
                             name = x['name']
                             if GameHandler.players.index(x) != GameHandler.turn:
-                                await send_message(websocket, 'error',{'message':'Не ваш ход'})
-                                await send_message(websocket, 'update_local',{'hand':GameHandler.get_current_hand(websocket),'current_card':GameHandler.current_card})
+                                await send_message(websocket, 'error',{'message':'Не ваш ход','error_type':'not_your_turn','hand':GameHandler.get_current_hand(websocket),'current_card':GameHandler.current_card})
+                                # await send_message(websocket, 'update_local',{})
                                 break
                                 
                     GameHandler.remove_card_from_hand(data['data']['card'],websocket)
@@ -191,6 +191,7 @@ async def handle_connection(websocket):
                         await broadcast('played_card',{'card':data['data']['card'], 'next_turn':data['data']['next_turn'], 'turn': GameHandler.turn, 'name':name})
 
                 elif data['type'] == 'polisvin':
+                    GameHandler.current_card = 'polisvin_'+data['data']['color']
                     await broadcast('polisvin',{'color':data['data']['color']})
                 
                 elif data['type'] == 'update_all':
