@@ -18,7 +18,10 @@ function OnLoadBodyEvent() {
         'cat2.gif','skeleton.gif','cat3.gif',
         'woman.gif','porn.gif','poop.gif',
         'man.gif','anime.gif','kaneki.gif',
-        'tomato.gif','dick.gif','dick1.gif'
+        'tomato.gif','dick.gif','dick1.gif',
+        'sobaka.gif','tratatata.gif','shaman.gif',
+        'kuplinov.gif','medved.gif','man1.gif',
+        'kratos.gif','fish.gif','vuchich.gif'
     ]
     for (let x = 0; x < available_images.length; x++) {
         const element = available_images[x];
