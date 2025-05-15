@@ -379,3 +379,17 @@ function animatePlayedCardFromAnotherPlayer(played_card, player, fromPlayer = tr
         }
     }
 }
+
+function SortPlayers(players) {
+    for (let x = 0; x < players.length; x++) {
+        const element = players[x];
+        if(players[0]['name'] == MyName){
+            return players
+        }
+        else{
+            let temp = players[0]
+            players.splice(0,1)
+            players.push(temp)
+        }
+    }
+}

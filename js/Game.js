@@ -192,7 +192,7 @@ function AddCardToHand(card_name) {
         CardInHandListener()
         PlayebleCardsHighlight()
     },350)
-    send_message('update_all',{'gg':'gg'})
+    // send_message('update_all',{'gg':'gg'})
 }
 
 function go_turn(turn, players) {

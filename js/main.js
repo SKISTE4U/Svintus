@@ -114,7 +114,8 @@ function JoinTheGame() {
                     }
                     
                 }
-                arrangePlayersInSemicircle(data['players'])
+                let players = SortPlayers(data['players'])
+                arrangePlayersInSemicircle(players)
                 break
                 
             case 'stop_game':
@@ -158,9 +159,30 @@ function JoinTheGame() {
                         if(data['name'] == person.querySelector('.name').innerHTML){
                             person.querySelector('.cardsAmount').innerHTML = message['data']['players'][x]['hand'].length
                         }
+                        else{
+                            document.querySelector('#your_cards').innerHTML = ''
+                            for (let y = 0; y < data['hand'].length; y++) {
+                                const element = data['hand'][y];
+                                AddCardToHand(element)
+                            }
+                        }
                         
                     }
                 }
+                break
+            case 'error':
+                $.notify(message['data']['message'])
+                send_message('update_all',{'dummy':'dummy'})
+                break
+
+            case 'update_local':
+                let hand = message['data']['hand']
+                document.querySelector('#your_cards').innerHTML = ''
+                for (let y = 0; y < data['hand'].length; y++) {
+                    const element = data['hand'][y];
+                    AddCardToHand(element)
+                }
+                document.querySelector('#current_card').src = 'assets/cards/'+message['data']['current_card']+'.png'
         }
     };
 }

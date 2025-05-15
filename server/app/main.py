@@ -34,6 +34,11 @@ class Game():
                 websocket.close()
                 self.players.remove(x)
 
+    async def get_current_hand(self,websocket):
+        for x in self.players:
+            if x['connection'] == websocket:
+                return x['hand']
+
     async def unregister_player_by_name(self,name):
         for x in range(0,len(self.players)):
             if 'name' == self.players[x]['name']:
@@ -163,11 +168,10 @@ async def handle_connection(websocket):
                     for x in GameHandler.players:
                         if websocket == x['connection']:
                             name = x['name']
-                    for x in range(0,len(GameHandler.players)):
-                        if websocket == GameHandler.players[x]:
-                            if x != GameHandler.turn:
+                            if GameHandler.players.index(x) != GameHandler.turn:
                                 await send_message(websocket, 'error',{'message':'Не ваш ход'})
-                                return
+                                await send_message(websocket, 'update_local',{'hand':GameHandler.get_current_hand(websocket),'current_card':GameHandler.current_card})
+                                break
                                 
                     GameHandler.remove_card_from_hand(data['data']['card'],websocket)
                     GameHandler.current_card = data['data']['card']
@@ -196,7 +200,7 @@ async def handle_connection(websocket):
                         'turn':GameHandler.turn,
                         'current_card':GameHandler.current_card
                         }
-                    print(data)
+                    print(json.dumps(data,indent=2))
                     await broadcast('update',data)
 
                 elif data['type'] == 'take_card':
